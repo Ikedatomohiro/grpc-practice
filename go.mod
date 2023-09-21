@@ -1,4 +1,4 @@
-module example
+module example.com/todo
 
 go 1.21
 

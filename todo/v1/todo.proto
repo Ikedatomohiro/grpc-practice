@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package todo.v1;
+
+option go_package = "example.com/todo/v1;todov1";
+
+message TodoItem {
+    string id = 1;
+    string title = 2;
+    Status status = 3;
+
+    enum Status {
+        STATUS_UNKNOWN_UNSPECIFIED = 0;
+        STATUS_CLOSE = 1;
+        STATUS_OPEN = 2;
+    }
+}
+
+message CreateTodoRequest {
+    string title = 1;
+}
+
+message CreateTodoResponse {
+    TodoItem item = 1;
+}
+
+message DeleteTodoRequest {
+    string id = 1;
+}
+
+message DeleteTodoResponse {
+    string id = 1;
+}
+
+message UpdateTodoRequest {
+    string id = 1;
+    TodoItem.Status status = 2;
+}
+
+message UpdateTodoResponse {
+    TodoItem item = 1;
+}
+
+service TodoService {
+    rpc CreateTodo(CreateTodoRequest) returns (CreateTodoResponse) {}
+    rpc DeleteTodo(DeleteTodoRequest) returns (DeleteTodoResponse) {}
+    rpc UpdateTodo(UpdateTodoRequest) returns (UpdateTodoResponse) {}
+}
