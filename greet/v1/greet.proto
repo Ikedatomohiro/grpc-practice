@@ -6,6 +6,7 @@ option go_package = "example/gen/greet/v1;greetv1";
 
 message GreetRequest {
   string name = 1;
+  int32  age = 2;
 }
 
 message GreetResponse {

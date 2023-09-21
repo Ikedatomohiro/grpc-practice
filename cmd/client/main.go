@@ -18,7 +18,7 @@ func main() {
 	)
 	res, err := client.Greet(
 		context.Background(),
-		connect.NewRequest(&greetv1.GreetRequest{Name: "Your Name"}),
+		connect.NewRequest(&greetv1.GreetRequest{Name: "Tomo", Age: 23}),
 	)
 	if err != nil {
 		log.Println(err)

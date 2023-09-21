@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"connectrpc.com/connect"
 	"golang.org/x/net/http2"
@@ -22,7 +23,7 @@ func (s *GreetServer) Greet(
 ) (*connect.Response[greetv1.GreetResponse], error) {
 	log.Println("Request headers: ", req.Header())
 	res := connect.NewResponse(&greetv1.GreetResponse{
-		Greeting: fmt.Sprintf("Hello, %s!", req.Msg.Name),
+		Greeting: fmt.Sprintf("My name is %s! I'm %s years old", req.Msg.Name, strconv.Itoa(int(req.Msg.Age))),
 	})
 	res.Header().Set("Greet-Version", "v1")
 	return res, nil
