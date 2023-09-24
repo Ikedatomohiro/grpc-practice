@@ -5,24 +5,24 @@ import (
 	"log"
 	"net/http"
 
-	greetv1 "example/gen/greet/v1"
-	"example/gen/greet/v1/greetv1connect"
+	todov1 "example.com/todo/gen/todo/v1"
+	"example.com/todo/gen/todo/v1/todov1connect"
 
 	"connectrpc.com/connect"
 )
 
 func main() {
-	client := greetv1connect.NewGreetServiceClient(
+	client := todov1connect.NewTodoServiceClient(
 		http.DefaultClient,
 		"http://localhost:8080",
 	)
-	res, err := client.Greet(
+	res, err := client.CreateTodo(
 		context.Background(),
-		connect.NewRequest(&greetv1.GreetRequest{Name: "Tomo", Age: 23}),
+		connect.NewRequest(&todov1.CreateTodoRequest{Title: "create todo"}),
 	)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	log.Println(res.Msg.Greeting)
+	log.Println(res.Msg.Item)
 }
