@@ -76,6 +76,24 @@ func (s *TodoServer) UpdateTodo(
 	return &res, nil
 }
 
+func (s *TodoServer) GetTodoList(
+	ctx context.Context,
+	req *connect.Request[todov1.GetTodoListRequest],
+) (*connect.Response[todov1.GetTodoListResponse], error) {
+	fmt.Println("GetTodoList")
+	var items []*todov1.TodoItem
+	s.items.Range(func(key, value interface{}) bool {
+		items = append(items, value.(*todov1.TodoItem))
+		return true
+	})
+	res := connect.Response[todov1.GetTodoListResponse]{
+		Msg: &todov1.GetTodoListResponse{
+			Items: items,
+		},
+	}
+	return &res, nil
+}
+
 func main() {
 	todoer := &TodoServer{}
 	mux := http.NewServeMux()

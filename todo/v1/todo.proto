@@ -41,8 +41,15 @@ message UpdateTodoResponse {
     TodoItem item = 1;
 }
 
+message GetTodoListRequest {}
+
+message GetTodoListResponse {
+    repeated TodoItem items = 1;
+}
+
 service TodoService {
     rpc CreateTodo(CreateTodoRequest) returns (CreateTodoResponse) {}
     rpc DeleteTodo(DeleteTodoRequest) returns (DeleteTodoResponse) {}
     rpc UpdateTodo(UpdateTodoRequest) returns (UpdateTodoResponse) {}
+    rpc GetTodoList(GetTodoListRequest) returns (GetTodoListResponse) {}
 }
