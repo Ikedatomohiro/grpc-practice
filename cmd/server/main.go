@@ -43,8 +43,18 @@ func (s *TodoServer) DeleteTodo(
 	req *connect.Request[todov1.DeleteTodoRequest],
 ) (*connect.Response[todov1.DeleteTodoResponse], error) {
 	fmt.Println("DeleteTodo")
+	_, ok := s.get(req.Msg.Id)
+	if !ok {
+		return nil, fmt.Errorf("item not found")
+	}
 
-	return nil, nil
+	s.items.Delete(req.Msg.Id)
+	res := connect.Response[todov1.DeleteTodoResponse]{
+		Msg: &todov1.DeleteTodoResponse{
+			Id: req.Msg.Id,
+		},
+	}
+	return &res, nil
 }
 
 func (s *TodoServer) UpdateTodo(
