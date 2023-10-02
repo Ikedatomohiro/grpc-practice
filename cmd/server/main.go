@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"sync"
 
@@ -32,6 +33,8 @@ func (s *TodoServer) CreateTodo(
 	res := connect.NewResponse(&todov1.CreateTodoResponse{
 		Item: item,
 	})
+	fmt.Println("CreateTodo")
+
 	return res, nil
 }
 
@@ -39,6 +42,8 @@ func (s *TodoServer) DeleteTodo(
 	ctx context.Context,
 	req *connect.Request[todov1.DeleteTodoRequest],
 ) (*connect.Response[todov1.DeleteTodoResponse], error) {
+	fmt.Println("DeleteTodo")
+
 	return nil, nil
 }
 
@@ -46,7 +51,19 @@ func (s *TodoServer) UpdateTodo(
 	ctx context.Context,
 	req *connect.Request[todov1.UpdateTodoRequest],
 ) (*connect.Response[todov1.UpdateTodoResponse], error) {
-	return nil, nil
+	fmt.Println("UpdateTodo")
+	todo, ok := s.get(req.Msg.Id)
+	if !ok {
+		return nil, fmt.Errorf("item not found")
+	}
+	todo.Status = req.Msg.Status
+	s.items.Store(todo.Id, todo)
+	res := connect.Response[todov1.UpdateTodoResponse]{
+		Msg: &todov1.UpdateTodoResponse{
+			Item: todo,
+		},
+	}
+	return &res, nil
 }
 
 func main() {
@@ -59,4 +76,12 @@ func main() {
 		// Use h2c so we can serve HTTP/2 without TLS.
 		h2c.NewHandler(mux, &http2.Server{}),
 	)
+}
+
+func (s *TodoServer) get(id string) (*todov1.TodoItem, bool) {
+	item, ok := s.items.Load(id)
+	if ok {
+		return item.(*todov1.TodoItem), true
+	}
+	return nil, false
 }
