@@ -8,7 +8,7 @@ import (
 	connect "connectrpc.com/connect"
 	context "context"
 	errors "errors"
-	v1 "example.com/todo/gen/todo/v1"
+	v1 "github.com/Ikedatomohiro/grpc-practice/todo/v1"
 	http "net/http"
 	strings "strings"
 )

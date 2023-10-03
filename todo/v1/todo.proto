@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package todo.v1;
 
-option go_package = "example.com/todo/gen/todo/v1;todov1";
+option go_package = "github.com/Ikedatomohiro/grpc-practice/todo/v1;todov1";
 
 message TodoItem {
     string id = 1;

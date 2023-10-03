@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	todov1 "example.com/todo/gen/todo/v1"
-	"example.com/todo/gen/todo/v1/todov1connect"
+	todov1 "github.com/Ikedatomohiro/grpc-practice/todo/v1"
+	"github.com/Ikedatomohiro/grpc-practice/todo/v1/todov1connect"
 
 	"connectrpc.com/connect"
 )
