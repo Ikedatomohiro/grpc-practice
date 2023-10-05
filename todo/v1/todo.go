@@ -3,6 +3,7 @@ package todov1
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"sync"
 
 	"connectrpc.com/connect"
@@ -18,6 +19,7 @@ func (s *TodoServer) CreateTodo(
 	ctx context.Context,
 	req *connect.Request[CreateTodoRequest],
 ) (*connect.Response[CreateTodoResponse], error) {
+	slog.Info("CreateTodo")
 	id := uuid.New().String()
 	item := &TodoItem{
 		Id:     id,
@@ -28,7 +30,6 @@ func (s *TodoServer) CreateTodo(
 	res := connect.NewResponse(&CreateTodoResponse{
 		Item: item,
 	})
-	fmt.Println("CreateTodo")
 
 	return res, nil
 }
@@ -37,7 +38,7 @@ func (s *TodoServer) DeleteTodo(
 	ctx context.Context,
 	req *connect.Request[DeleteTodoRequest],
 ) (*connect.Response[DeleteTodoResponse], error) {
-	fmt.Println("DeleteTodo")
+	slog.Info("DeleteTodo")
 	_, ok := s.get(req.Msg.Id)
 	if !ok {
 		return nil, fmt.Errorf("item not found")
@@ -56,7 +57,7 @@ func (s *TodoServer) UpdateTodo(
 	ctx context.Context,
 	req *connect.Request[UpdateTodoRequest],
 ) (*connect.Response[UpdateTodoResponse], error) {
-	fmt.Println("UpdateTodo")
+	slog.Info("UpdateTodo")
 	todo, ok := s.get(req.Msg.Id)
 	if !ok {
 		return nil, fmt.Errorf("item not found")
@@ -75,7 +76,7 @@ func (s *TodoServer) GetTodoList(
 	ctx context.Context,
 	req *connect.Request[GetTodoListRequest],
 ) (*connect.Response[GetTodoListResponse], error) {
-	fmt.Println("GetTodoList")
+	slog.Info("GetTodoList")
 	var items []*TodoItem
 	s.items.Range(func(key, value interface{}) bool {
 		items = append(items, value.(*TodoItem))
