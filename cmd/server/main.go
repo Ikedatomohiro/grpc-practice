@@ -17,7 +17,7 @@ func main() {
 		fmt.Println("Error loading .env file:", err)
 		return
 	}
-	mux := infrastructure.NewTodoServiceHandler()
+	mux := infrastructure.NewServiceHandler()
 	http.ListenAndServe(
 		os.Getenv("HOST"),
 		h2c.NewHandler(mux, &http2.Server{}),
