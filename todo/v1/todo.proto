@@ -8,6 +8,7 @@ message TodoItem {
     string id = 1;
     string title = 2;
     Status status = 3;
+    string user_id = 4;
 
     enum Status {
         STATUS_UNKNOWN_UNSPECIFIED = 0;
@@ -18,6 +19,7 @@ message TodoItem {
 
 message CreateTodoRequest {
     string title = 1;
+    string user_id = 2;
 }
 
 message CreateTodoResponse {
@@ -41,7 +43,9 @@ message UpdateTodoResponse {
     TodoItem item = 1;
 }
 
-message GetTodoListRequest {}
+message GetTodoListRequest {
+    string user_id = 1;
+}
 
 message GetTodoListResponse {
     repeated TodoItem items = 1;
