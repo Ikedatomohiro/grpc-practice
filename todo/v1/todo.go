@@ -20,11 +20,16 @@ func (s *TodoServer) CreateTodo(
 	req *connect.Request[CreateTodoRequest],
 ) (*connect.Response[CreateTodoResponse], error) {
 	slog.Info("CreateTodo")
+	err := validate(req)
+	if err != nil {
+		return nil, err
+	}
 	id := uuid.New().String()
 	item := &TodoItem{
 		Id:     id,
 		Title:  req.Msg.Title,
 		Status: TodoItem_STATUS_OPEN,
+		UserId: req.Msg.UserId,
 	}
 	s.items.Store(id, item)
 	res := connect.NewResponse(&CreateTodoResponse{
@@ -78,10 +83,10 @@ func (s *TodoServer) GetTodoList(
 ) (*connect.Response[GetTodoListResponse], error) {
 	slog.Info("GetTodoList")
 	var items []*TodoItem
-	s.items.Range(func(key, value interface{}) bool {
-		items = append(items, value.(*TodoItem))
-		return true
-	})
+	items, err := s.getUser(req.Msg.UserId)
+	if err != nil {
+		return nil, err
+	}
 	res := connect.Response[GetTodoListResponse]{
 		Msg: &GetTodoListResponse{
 			Items: items,
@@ -96,4 +101,15 @@ func (s *TodoServer) get(id string) (*TodoItem, bool) {
 		return item.(*TodoItem), true
 	}
 	return nil, false
+}
+
+func (s *TodoServer) getUser(id string) ([]*TodoItem, error) {
+	var items []*TodoItem
+	s.items.Range(func(key, value interface{}) bool {
+		if value.(*TodoItem).UserId == id {
+			items = append(items, value.(*TodoItem))
+		}
+		return true
+	})
+	return items, nil
 }
